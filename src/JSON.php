@@ -1,8 +1,7 @@
 <?php
 namespace DvTeam\JSON;
 
-use JsonException;
-use RuntimeException;
+use \JsonException as BaseJsonException;
 
 abstract class JSON {
 	/**
@@ -20,13 +19,14 @@ abstract class JSON {
 	
 	/**
 	 * @param string $input
+	 * @param bool $assoc
 	 * @return mixed|null
 	 */
-	public static function parse(string $input) {
+	public static function parse(string $input, bool $assoc = true) {
 		try {
-			return json_decode($input, false, 512, JSON_THROW_ON_ERROR);
-		} catch (JsonException $e) {
-			throw new RuntimeException($e->getMessage(), $e->getCode(), $e);
+			return json_decode($input, $assoc, 512, JSON_THROW_ON_ERROR);
+		} catch (BaseJsonException $e) {
+			throw new JsonException($e->getMessage(), $e->getCode(), $e);
 		}
 	}
 }
